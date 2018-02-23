@@ -2,9 +2,12 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Enum\Gender;
+use Fervo\EnumBundle\Form\EnumType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class DefaultController extends Controller
 {
@@ -13,9 +16,20 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        // replace this example code with whatever you need
+        $gender = Gender::FEMALE();
+
+        $builder = $this->createFormBuilder()
+            ->add('gender', EnumType::class, [
+                'data_class' => Gender::class,
+                'data' => $gender,
+            ])
+            ->add('submit', SubmitType::class)
+        ;
+
+        $form = $builder->getForm();
+
         return $this->render('default/index.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+            'form' => $form->createView(),
         ]);
     }
 }
